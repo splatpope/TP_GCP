@@ -108,4 +108,6 @@ def analyzeText(text):
 # Extract timestamp from filename
 def extractTimestamp(filename):
 
-    # Here extract the timestamp from the filename :-)
+    date=filename[0:-4]
+    date_time_obj = datetime.datetime.strptime(date, '%y_%m_%d')
+    return str(date_time_obj.date())
