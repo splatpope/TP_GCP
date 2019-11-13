@@ -3,7 +3,7 @@
 ###############################
 
 TARGET_LANGUAGE="en"
-DESTINATION_BUCKET="LE_NOM_DE_VOTRE_BUCKET_DE_DESTINATION"
+DESTINATION_BUCKET="LOL_MON_BUCKETTE_<3<3<3"
 
 ##############################
 # 1. Setup the environment
@@ -30,10 +30,15 @@ import datetime, base64, json, os
 
 ###########################################
 
+translate_client = translate.Client()
+nlp_client = language.LanguageServiceClient()
+storage_client = storage.Client()
+
 
 #########################################################################################
 # 2. Process with OCR the images that triggered the event
 #########################################################################################
+# ^WTF ???
 
 """
 Here, you will define the function that will process the received PubSub message. First, use Translate API
@@ -71,10 +76,9 @@ def process_text(event, context):
     
     #############################################
     # HERE, write the JSON file to your bucket
-
-
-
-
+	bucket = storage_client.get_bucket(DESTINATION_BUCKET)
+	blob = bucket.blob(original_image_export_name)
+	blob.upload_from_filename(filename="/tmp/myJson.json")
     ##############################################
     
 
@@ -87,11 +91,17 @@ def process_text(event, context):
 def analyzeText(text):
 
     # HERE, detect language and translate to English
+    LD_response = translate_client.detect_language(text)
+    detectedLanguage = LD_response["language"]
     
-    
+    translate_response = translate_client.translate(text, target_language=TARGET_LANGUAGE)
+    translatedText = translate_response["translatedText"]   
 
 
     # HERE, use NLP API to detect sentiment and entities
+    document = language.types.Document(content=translatedText, type='PLAIN_TEXT')
+    response_sentiment = nlp_client.analyze_sentiment(document=document, encoding_type='UTF-32')
+    response_entities = nlp_client.analyze_entities(document=document, encoding_type='UTF-32')
     
 
     # Compile everything in a dictionnary and return it

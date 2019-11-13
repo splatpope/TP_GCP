@@ -25,6 +25,8 @@ from google.cloud import pubsub_v1
 
 ###########################################
 
+publisher = pubsub_v1.PublisherClient()
+vision_client = vision.ImageAnnotatorClient()
 
 
 #########################################################################################
@@ -57,11 +59,12 @@ def process_image(file, context):
     name = file['name']
 
     #OCR the new picture
-    detected_text=detect_text(bucket=bucket, filename=name)
+    detected_text = detect_text(bucket=bucket, filename=name)
 
     ######################################################
     #HERE, Publish to PubSub to trigger the next function
-    
+    topic_path = publisher.topic_path(PROJECT_ID, PUB_SUB_TOPIC_NAME)
+    publisher.publish(topic_path, bytes(detected_text, encoding='utf-8'), image_name=name)
 
 
     ######################################################
@@ -90,21 +93,10 @@ def detect_text(bucket, filename):
     # HERE, do the OCR by requesting to Vision API
     # Make sure to explore what is contained in the resulting object
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+	tdr = vision_client.text_detection({'source' : { 'image_uri' : 'gs://{}/{}'.format(bucket,filename)}})
+	annotations = tdr.text_annotations
+	rawResult = annotations[0].description
+	
     return rawResult
 
     ########################################################
