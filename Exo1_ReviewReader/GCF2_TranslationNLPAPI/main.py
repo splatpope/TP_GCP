@@ -3,7 +3,7 @@
 ###############################
 
 TARGET_LANGUAGE="en"
-DESTINATION_BUCKET="LOL_MON_BUCKETTE_<3<3<3"
+DESTINATION_BUCKET="notre-output"
 
 ##############################
 # 1. Setup the environment

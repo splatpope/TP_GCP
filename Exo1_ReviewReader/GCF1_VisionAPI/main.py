@@ -2,8 +2,8 @@
 # 0. Set environment variables
 ###############################
 
-PROJECT_ID="MON_PROJECT_ID"
-PUB_SUB_TOPIC_NAME="MON_TOPIC"
+PROJECT_ID="project9"
+PUB_SUB_TOPIC_NAME="TextToAnalyze"
 
 ##############################
 # 1. Setup the environment
